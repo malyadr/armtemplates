@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "tagName": {
+        "type": "string",
+        "defaultValue": "owner",
+        "metadata": {
+          "description": "The name of the required tag."
+        }
+      },
+      "tagValue": {
+        "type": "string",
+        "defaultValue": "malyadri",
+        "metadata": {
+          "description": "The value of the required tag."
+        }
+      }
+    },
+    "variables": {
+      "policyDisplayName": "Enforce Required Tag",
+      "policyDescription": "This policy ensures that all resources have a required tag with a specific value.",
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2020-09-01",
+        "name": "[guid(resourceGroup().id)]",
+        "properties": {
+          "displayName": "[variables('policyDisplayName')]",
+          "description": "[variables('policyDescription')]",
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/1e30110a-5ceb-460c-a204-c1c3969c6d62",
+          "parameters": {
+             "tagName": {
+                 "value": "[parameters('tagName')]"
+             },
+             "tagValue": {
+                 "value": "[parameters('tagValue')]"
+             }
+          },
+          "scope": "[format('/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourcegroups/Demo-malyadri')]"
+        }
+      }
+    ]
+  }

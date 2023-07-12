@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "policyDisplayName": {
+        "type": "string",
+        "defaultValue": "policy for kubernetes",
+        "metadata": {
+          "description": "Display name of the Azure Policy definition."
+        }
+      },
+      "allowedContainerImagesRegex": {
+        "type": "string",
+        "defaultValue": "containersample243\\.azurecr\\.io/.+$",
+        "metadata": { 
+          "displayName": "Allowed registry or registries regex",
+          "description": "List of allowed container images."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2020-09-01",
+        "name": "[guid(resourceGroup().id)]",
+        "properties": {
+          "displayName": "[parameters('policyDisplayName')]",
+          "description": "Enforces the use of allowed container images in AKS cluster",
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/febd0533-8e55-448f-b837-bd0e06f16469",
+          "parameters": {
+            "allowedContainerImagesRegex": {
+              "value": "[parameters('allowedContainerImagesRegex')]"
+            }
+          },
+          "scope": "[format('/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourcegroups/Demo-malyadri')]"
+        }
+      }
+    ]
+  }
